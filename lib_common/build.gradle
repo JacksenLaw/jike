@@ -1,0 +1,98 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+
+    //兼容包
+    api rootProject.implementation.appcompat
+    //material组件
+    api rootProject.implementation.material
+    //约束布局
+    api rootProject.implementation.constraintlayout
+    //navigation导航
+    api rootProject.implementation["navigation-fragment"]
+    api rootProject.implementation.navigation
+
+    //包含了 viewmodel 和 livedata
+    api rootProject.implementation.lifecycle
+    //或者指明使用viewmodel
+    //api "androidx.lifecycle:lifecycle-viewmodel:2.1.0"
+    //或者指明使用livedata
+    //api 'androidx.lifecycle:lifecycle-livedata:2.1.0'
+    //api 'androidx.lifecycle:lifecycle-livedata-core:2.1.0'
+
+    //注解使用生命周期编译器
+    annotationProcessor rootProject.annotationProcessor["lifecycle-compiler"]
+
+    //paging分页组件
+    api rootProject.implementation.paging
+
+    //页面刷新组件
+    api rootProject.implementation["smartrefresh-layout"]
+    api rootProject.implementation["smartrefresh-header"]
+
+    //viewpager2 可以禁止预加载
+    api rootProject.implementation.viewpager2
+
+    //视频播放组件
+    api rootProject.implementation["exoplayer-core"]
+    api rootProject.implementation["exoplayer-dash"]
+    api rootProject.implementation["exoplayer-ui"]
+
+
+    //room数据库
+    api rootProject.implementation.room
+    api rootProject.implementation["room-lifecycle"]
+    annotationProcessor rootProject.annotationProcessor.room
+    annotationProcessor rootProject.annotationProcessor["room-lifecycle"]
+
+
+    //图片加载
+    api rootProject.implementation.glide
+    api rootProject.implementation["glide-transformations"]
+    annotationProcessor rootProject.annotationProcessor.glide
+
+    //camera
+    api rootProject.implementation["camera-core"]
+    api rootProject.implementation["camera-camera2"]
+    api rootProject.implementation["camera-view"]
+    api rootProject.implementation["camera-extensions"]
+//    api rootProject.implementation["camera-lifecycle"]
+
+    //workmanager
+    api rootProject.implementation.work
+
+    //gesture imageview
+//    api 'com.github.chrisbanes:PhotoView:2.3.0@aar'
+
+    //aliyun oss
+    api 'com.aliyun.dpa:oss-android-sdk:+'
+
+    //fastjson解析
+    api rootProject.implementation.fastjson
+
+    //rxbinging
+    api rootProject.implementation.rxbinging
+}

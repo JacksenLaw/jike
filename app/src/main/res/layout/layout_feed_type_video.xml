@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="feed"
+            type="Feed" />
+
+        <variable
+            name="lifeCycleOwner"
+            type="androidx.lifecycle.LifecycleOwner" />
+
+        <import type="com.jackson.jike.model.Feed" />
+
+        <import type="com.jackson.jike.presenter.InteractionPresenter" />
+
+        <import type="android.view.View" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_10">
+
+        <include
+            android:id="@+id/layout_author"
+            layout="@layout/layout_feed_author"
+            app:user="@{feed.author}" />
+        <!--app:user="@{feed.author}" 因为 ayout/layout_feed_author
+        中使用到了Feed实体类,并且variable name为user，所以需要用app:user=@{feed.author}传入 -->
+
+        <include
+            layout="@layout/layout_feed_text"
+            app:feedText="@{feed.feeds_text}"
+            app:lines="@{3}" />
+
+        <!-- 视频区域 -->
+        <!-- 动态设置view的宽高时，不建议在xml中绑定数据 -->
+        <com.jackson.jike.exoplayer.ListPlayerView
+            android:id="@+id/list_player_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10" />
+
+        <include
+            layout="@layout/layout_feed_tag"
+            app:tagText="@{feed.activityText}" />
+
+        <include
+            android:id="@+id/layout_hot_comment"
+            layout="@layout/layout_feed_hot_comment"
+            app:comment="@{feed.topComment}" />
+
+        <include
+            android:id="@+id/layout_interaction"
+            layout="@layout/layout_feed_interaction"
+            app:feed="@{feed}"
+            app:lifeCycleOwner="@{lifeCycleOwner}"
+            app:visibility="@{View.VISIBLE}" />
+
+    </LinearLayout>
+</layout>

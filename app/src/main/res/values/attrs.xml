@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RecordView">
+        <attr name="progress_color" format="color"/>
+        <attr name="progress_width" format="dimension"/>
+        <attr name="background_color" format="color"/><!-- 背景色 -->
+        <attr name="radius" format="dimension"/><!--  -->
+        <attr name="maxDuration" format="integer"/><!-- 录制最大时长 -->
+    </declare-styleable>
+</resources>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/color_white"
+        android:orientation="vertical">
+
+        <!-- 文件信息区域 -->
+        <FrameLayout
+            android:id="@+id/comment_ext_layout"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_5"
+            android:layout_marginRight="@dimen/dp_5"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:visibility="gone">
+
+            <com.jackson.jike.view.PPImageView
+                android:id="@+id/comment_cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/comment_icon_play"
+                android:layout_width="@dimen/dp_20"
+                android:layout_height="@dimen/dp_20"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_video_play"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/comment_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|top"
+                android:padding="@dimen/dp_3"
+                android:src="@drawable/icon_close"
+                android:tint="@color/color_white" />
+            <!-- android:tint="@color/color_white" 为ImageView着色-->
+
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/color_gray2" />
+
+        <!-- 输入框 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_45"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10">
+
+            <com.jackson.jike.view.PPEditTextView
+                android:id="@+id/input_view"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp_40"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edit_view"
+                android:hint="@string/say_something"
+                android:textColor="@color/color_333"
+                android:textColorHint="@color/color_999"
+                android:textSize="@dimen/sp_12" />
+
+            <ImageView
+                android:id="@+id/comment_video"
+                android:layout_width="@dimen/dp_36"
+                android:layout_height="@dimen/dp_36"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:src="@drawable/icon_publish_video" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/comment_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:backgroundTint="@color/color_theme"
+                android:gravity="center"
+                android:paddingLeft="@dimen/dp_14"
+                android:paddingTop="@dimen/dp_4"
+                android:paddingRight="@dimen/dp_14"
+                android:paddingBottom="@dimen/dp_4"
+                android:text="@string/send"
+                android:textColorHint="@color/color_white"
+                app:cornerRadius="@dimen/dp_5" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

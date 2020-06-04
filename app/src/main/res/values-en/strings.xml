@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">JiKe</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_qq">QQ login</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="step_on">Step on</string>
+    <string name="praise">Praise</string>
+    <string name="comment">Comment</string>
+    <string name="share">Share</string>
+    <string name="collect">Collect</string>
+    <string name="collected">Collected</string>
+
+    <string name="followed">Followed</string>
+    <string name="follow">Follow</string>
+    <string name="say_something">Say something…</string>
+    <string name="feed_detail">Post detail</string>
+    <string name="author">Author</string>
+    <string name="feed_comment_empty">No comment yet. Grab the couch!</string>
+    <string name="send">Send</string>
+    <string name="capture_tips">Tap to take a photo, long press to record</string>
+    <string name="capture_permission_message">The required permissions are not authorized. The function cannot be used. Please reauthorize</string>
+    <string name="preview_ok">OK</string>
+    <string name="file_upload_failed">Upload failed, please repost</string>
+    <string name="publishing">Publishing…</string>
+    <string name="capture_permission_no">NO</string>
+    <string name="capture_permission_ok">OK</string>
+    <string name="publish_title">Postings</string>
+    <string name="publish_button">Publish</string>
+    <string name="publish_edit_hint">Add a topic and the content will be seen by more people</string>
+    <string name="publish_add_tag">Add topic</string>
+    <string name="publish_exit_message">Content that continues to exit the edit will be lost</string>
+    <string name="cancel">Cancel</string>
+    <string name="sure">Sure</string>
+    <string name="tag_title">Select the label</string>
+    <string name="publish_success">Publish success</string>
+    <string name="file_upload_cover_message">Failed to upload the cover image</string>
+    <string name="file_upload_original_message">The original file failed to upload</string>
+    <string name="publish_say_something">Say something</string>
+    <string name="tag_list_no_follow">Haven\'t looked at any data yet, go to the recommendation page ~</string>
+    <string name="tag_list_no_follow_button">Look at the recommended</string>
+    <string name="tag_list_item_hot_feed">hot content</string>
+    <string name="look_num">people watched</string>
+    <string name="look_num_w">w people watched</string>
+    <string name="play_error">Play error</string>
+    <string name="view_error">View error</string>
+    <string name="like_count">\nPraise</string>
+    <string name="fans_count">\nFans</string>
+    <string name="follow_count">\nFocus</string>
+    <string name="score_count">\nIntegral</string>
+    <string name="fragment_my_feed">Feed</string>
+    <string name="fragment_my_comment">Comment</string>
+    <string name="fragment_my_favorite">Collect</string>
+    <string name="fragment_my_history">Watch history</string>
+    <string name="fragment_my_logout">Are you sure you want to quit？</string>
+
+    <string name="favorite_list">Favorite list</string>
+    <string name="history_list">Watch history</string>
+
+    <string-array name="tabs_profile">
+        <item>Dynamic</item>
+        <item>Feed</item>
+        <item>Comment</item>
+    </string-array>
+</resources>

@@ -1,0 +1,86 @@
+//config
+ext {
+    compileSdkVersion = 29
+    buildToolsVersion = "29.0.3"
+    minSdkVersion = 21
+    targetSdkVersion = 29
+    versionCode = 1
+    versionName = "1.0"
+
+    implementation = [
+
+            //兼容包
+            "appcompat"            : "androidx.appcompat:appcompat:1.1.0",
+            //material组件
+            "material"             : 'com.google.android.material:material:1.2.0-alpha06',
+            //约束布局
+            "constraintlayout"     : 'androidx.constraintlayout:constraintlayout:1.1.3',
+            //navigation导航
+            "navigation-fragment"  : 'androidx.navigation:navigation-fragment:2.1.0',
+            "navigation"           : 'androidx.navigation:navigation-ui:2.1.0',
+            //包含了 viewmodel 和 livedata
+            "lifecycle"            : 'androidx.lifecycle:lifecycle-extensions:2.1.0',
+            //paging分页组件
+            "paging"               : 'androidx.paging:paging-runtime:2.1.0',
+
+            //页面刷新组件
+            "smartrefresh-layout"  : 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0',
+            "smartrefresh-header"  : 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0',
+
+            //viewpager2 可以禁止预加载
+            "viewpager2"           : "androidx.viewpager2:viewpager2:1.1.0-alpha01",
+
+            //视频播放组件
+            "exoplayer-core"       : 'com.google.android.exoplayer:exoplayer-core:2.10.4',
+            "exoplayer-dash"       : 'com.google.android.exoplayer:exoplayer-dash:2.10.4',
+            "exoplayer-ui"         : 'com.google.android.exoplayer:exoplayer-ui:2.10.4',
+
+            //room数据库
+            "room"                 : 'android.arch.persistence.room:runtime:1.1.1',
+            "room-lifecycle"       : "android.arch.lifecycle:extensions:1.1.1",
+
+            //图片加载
+            "glide"                : 'com.github.bumptech.glide:glide:4.9.0',
+            "glide-transformations": 'jp.wasabeef:glide-transformations:4.0.0',
+
+            //相机
+            "camera-core"          : 'androidx.camera:camera-core:1.0.0-alpha04',//beta03
+            "camera-camera2"       : 'androidx.camera:camera-camera2:1.0.0-alpha04',//beta03
+            "camera-view"          : 'androidx.camera:camera-view:1.0.0-alpha01',//alpha10
+            "camera-extensions"    : 'androidx.camera:camera-extensions:1.0.0-alpha01',//alpha10
+//            "camera-lifecycle"    : 'androidx.camera:camera-lifecycle:1.0.0-alpha04',//beta03
+
+            //workmanager
+            "work"                 : 'androidx.work:work-runtime:2.3.4',
+
+            //fastjson解析
+            "fastjson"             : 'com.alibaba:fastjson:1.2.59',
+
+            //okhttp
+            "okhttp"               : 'com.squareup.okhttp3:okhttp:4.2.0',
+            "logging"              : 'com.squareup.okhttp3:logging-interceptor:3.5.0',
+
+            //auto-service
+            "auto-service"         : 'com.google.auto.service:auto-service:1.0-rc6',
+
+            //rxbinging
+            "rxbinging"            : 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2',
+
+    ]
+
+    annotationProcessor = [
+            //room数据库
+            "room"              : 'android.arch.persistence.room:compiler:1.1.1',
+            "room-lifecycle"    : "android.arch.lifecycle:compiler:1.1.1",
+
+            //图片加载
+            "glide"             : 'com.github.bumptech.glide:compiler:4.9.0',
+
+            //注解使用生命周期编译器
+            "lifecycle-compiler": "androidx.lifecycle:lifecycle-compiler:2.2.0",
+
+            //auto-service
+            "auto-service"      : "com.google.auto.service:auto-service:1.0-rc6"
+    ]
+
+}

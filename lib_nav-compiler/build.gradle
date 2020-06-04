@@ -1,0 +1,19 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(':lib_nav-annotation')
+
+    implementation rootProject.implementation.fastjson
+
+    implementation rootProject.implementation["auto-service"]
+    annotationProcessor rootProject.annotationProcessor["auto-service"]
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+sourceCompatibility = "8"
+targetCompatibility = "8"

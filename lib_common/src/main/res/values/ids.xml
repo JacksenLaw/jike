@@ -1,0 +1,4 @@
+<resources>
+    <item name="statusBar_fake_status_bar_view" type="id" />
+    <item name="statusbBar_translucent_view" type="id" />
+</resources>
