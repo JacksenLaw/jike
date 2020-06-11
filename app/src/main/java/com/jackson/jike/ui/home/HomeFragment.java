@@ -43,7 +43,6 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
     }
 
     public void refresh() {
-        KLog.i("refresh  feedType = " + feedType);
         mRefreshLayout.autoRefresh();
     }
 
