@@ -8,12 +8,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
+import androidx.navigation.fragment.FragmentNavigator;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jackson.common.util.CommonUtil;
 import com.jackson.common.util.StatusBar;
 import com.jackson.jike.model.Destination;
+import com.jackson.jike.ui.home.HomeFragment;
 import com.jackson.jike.ui.login.UserManager;
 import com.jackson.jike.util.AppConfig;
 import com.jackson.jike.util.NavGraphBuilder;
@@ -79,6 +82,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             PlayerManager.get().play();
             curMenuId = menuItem.getItemId();
         }
+
+        NavDestination currentDestination = navController.getCurrentDestination();
+        if (currentDestination instanceof FragmentNavigator.Destination) {
+            FragmentNavigator.Destination destination = (FragmentNavigator.Destination) currentDestination;
+            if (curMenuId == destination.getId()) {
+//                InvokeUtils.invokeDeclaredMethod(destination.getClassName(), "refresh");
+                Fragment currentFragment = getSupportFragmentManager().getPrimaryNavigationFragment();
+                if (currentFragment instanceof HomeFragment) {
+                    ((HomeFragment) currentFragment).refresh();
+                }
+                return false;
+            }
+        }
+
         navController.navigate(menuItem.getItemId());
         return !TextUtils.isEmpty(menuItem.getTitle());
     }

@@ -36,6 +36,7 @@ import com.jackson.jike.ui.publish.CaptureActivity;
 import com.jackson.network.ApiResponse;
 import com.jackson.network.JsonCallback;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -58,6 +59,8 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
     private String coverUrl;
     private String fileUrl;
     private LoadingDialog loadingDialog;
+    private Executor ioExecutor = ArchTaskExecutor.getIOThreadExecutor();
+    private Executor mainExecutor = ArchTaskExecutor.getMainThreadExecutor();
     private Window window;
     private Context mContext = AppGlobals.getApplication();
 
@@ -195,7 +198,7 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
         AtomicInteger count = new AtomicInteger(1);
         if (!TextUtils.isEmpty(coverPath)) {
             count.set(2);
-            ArchTaskExecutor.getIOThreadExecutor().execute(() -> {
+            ioExecutor.execute(() -> {
                 int remain = count.decrementAndGet();
                 coverUrl = FileUploadManager.upload(coverPath);
                 if (remain <= 0) {
@@ -208,7 +211,7 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
                 }
             });
         }
-        ArchTaskExecutor.getIOThreadExecutor().execute(() -> {
+        ioExecutor.execute(() -> {
             int remain = count.decrementAndGet();
             fileUrl = FileUploadManager.upload(filePath);
             if (remain <= 0) {
@@ -231,19 +234,22 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
                 super.onSuccess(response);
                 onCommentSuccess(response.body);
                 dismissLoadingDialog();
+                CommonUtil.showToast(getString(R.string.comment_add_success));
             }
 
             @Override
             public void onError(ApiResponse<Comment> response) {
                 super.onError(response);
                 dismissLoadingDialog();
+                CommonUtil.showToast(getString(R.string.comment_add_failed));
             }
         }, this, commentText, itemId, isVideo ? coverUrl : fileUrl, isVideo ? fileUrl : null, width, height);
     }
 
     private void showLoadingDialog() {
         if (loadingDialog == null) {
-            loadingDialog = new LoadingDialog(mContext);
+            loadingDialog = new LoadingDialog(getContext());
+            loadingDialog.setCancelable(false);
             loadingDialog.setLoadingText(getString(R.string.publishing));
             loadingDialog.setCanceledOnTouchOutside(false);
             loadingDialog.setCancelable(false);
@@ -257,7 +263,7 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
         if (loadingDialog != null) {
             //dismissLoadingDialog  的调用可能会出现在异步线程调用
             if (Looper.myLooper() == Looper.getMainLooper()) {
-                ArchTaskExecutor.getMainThreadExecutor().execute(() -> {
+                mainExecutor.execute(() -> {
                     if (loadingDialog != null && loadingDialog.isShowing()) {
                         loadingDialog.dismiss();
                     }
@@ -269,7 +275,7 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
     }
 
     private void onCommentSuccess(Comment body) {
-        ArchTaskExecutor.getMainThreadExecutor().execute(() -> {
+        mainExecutor.execute(() -> {
             if (mListener != null) {
                 mListener.onAddComment(body);
             }
@@ -281,6 +287,7 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
     public void dismiss() {
         super.dismiss();
         dismissLoadingDialog();
+        mBinding.inputView.setText("");
         filePath = null;
         fileUrl = null;
         coverUrl = null;

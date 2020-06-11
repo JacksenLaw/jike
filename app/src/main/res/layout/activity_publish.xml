@@ -28,7 +28,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/dp_10"
                 android:padding="@dimen/dp_6"
-                android:src="@drawable/icon_close"/>
+                android:src="@drawable/icon_back_black"/>
 
 
             <TextView
@@ -90,10 +90,10 @@
             android:id="@+id/action_add_tag"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/dp_25"
-            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_16"
             android:gravity="center"
-            android:paddingLeft="@dimen/dp_10"
+            android:paddingStart="@dimen/dp_10"
             android:text="@string/publish_add_tag"
             android:textColor="@color/color_theme"
             android:textSize="@dimen/sp_12"
@@ -113,7 +113,7 @@
             android:id="@+id/action_add_file"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_10"
             android:src="@drawable/ic_add_file"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -123,7 +123,7 @@
             android:id="@+id/file_container"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_16"
             android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -139,14 +139,16 @@
                 android:layout_width="@dimen/dp_30"
                 android:layout_height="@dimen/dp_30"
                 android:layout_gravity="center"
-                android:src="@drawable/icon_video_play"/>
+                android:src="@drawable/icon_video_play"
+                android:contentDescription="@null" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/action_delete_file"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right|top"
-                android:paddingLeft="@dimen/dp_6"
+                android:layout_gravity="end|top"
+                android:layout_marginTop="@dimen/dp_5"
+                android:layout_marginEnd="@dimen/dp_5"
                 app:srcCompat="@drawable/icon_close"
                 app:tint="@color/color_white"/>
         </FrameLayout>

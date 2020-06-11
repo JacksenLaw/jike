@@ -22,7 +22,7 @@ public class LoadingDialog extends AlertDialog {
         super(context);
     }
 
-    protected LoadingDialog(@NonNull Context context, int themeResId) {
+    public LoadingDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
     }
 

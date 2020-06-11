@@ -20,6 +20,11 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
@@ -75,11 +80,11 @@ dependencies {
     annotationProcessor rootProject.annotationProcessor.glide
 
     //camera
-    api rootProject.implementation["camera-core"]
+//    api rootProject.implementation["camera-core"]
     api rootProject.implementation["camera-camera2"]
     api rootProject.implementation["camera-view"]
     api rootProject.implementation["camera-extensions"]
-//    api rootProject.implementation["camera-lifecycle"]
+    api rootProject.implementation["camera-lifecycle"]
 
     //workmanager
     api rootProject.implementation.work

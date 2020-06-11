@@ -39,7 +39,6 @@
         android:background="@color/transparent"
         android:paddingStart="@{paddingLeft}"
         android:paddingTop="@{paddingTop}"
-        android:paddingBottom="@dimen/dp_3"
         tools:context=".ui.detail.FeedDetailActivity">
 
         <com.jackson.jike.view.PPImageView

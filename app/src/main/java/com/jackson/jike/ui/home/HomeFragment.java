@@ -42,6 +42,11 @@ public class HomeFragment extends AbsListFragment<Feed, HomeViewModel> {
         return fragment;
     }
 
+    public void refresh() {
+        KLog.i("refresh  feedType = " + feedType);
+        mRefreshLayout.autoRefresh();
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mViewModel.getCacheLiveData().observe(this, feeds -> submitList(feeds));

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resource>
+
+    <paths>
+        <!-- 代表设备的根目录new File("/jike") -->
+        <root-path
+            name="root"
+            path="jike" /><!-- path 代表子目录-->
+        <!-- 代表Context.getFilesDir() + "/path/" -->
+        <files-path
+            name="files"
+            path="file" />
+        <!-- 代表Context.getCacheDir() + "/path/" -->
+        <cache-path
+            name="cache"
+            path="cache" />
+        <!-- path设置为'.'时代表整个存储卡 Environment.getExternalStorageDirectory() -->
+        <external-path
+            name="external_storage_root"
+            path="." />
+        <!-- 代表Environment.getExternalStorageDirectory() + "/path/" -->
+        <external-path
+            name="external"
+            path="jike" />
+        <!-- 代表Context.getExternalFilesDir(null) + "/path/" -->
+        <external-files-path
+            name="name"
+            path="jike" />
+        <!-- 代表Context.getExternalCacheDir() + "/path/" -->
+        <external-cache-path
+            name="name"
+            path="jike" />
+    </paths>
+
+</resource>

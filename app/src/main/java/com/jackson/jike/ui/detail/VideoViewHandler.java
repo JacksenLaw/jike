@@ -23,7 +23,6 @@ import com.jackson.jike.exoplayer.FullScreenPlayerView;
 public class VideoViewHandler extends ViewHandler {
 
     private final LayoutFeedDetailTypeVideoBinding mVideoBinding;
-    private String category;
     private String mCategory;
     private FullScreenPlayerView playerView;
     private final CoordinatorLayout coordinator;

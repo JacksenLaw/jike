@@ -1,2 +1,3 @@
 include ':app', ':lib_nav-annotation', ':lib_nav-compiler', ':lib_network', ':lib_common'
 rootProject.name = 'JiKe'
+include ':lib_permission'

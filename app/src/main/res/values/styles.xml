@@ -23,8 +23,10 @@
     </style>
 
     <style name="capture" parent="AppTheme">
-        <item name="android:windowFullscreen">true</item>
+<!--        <item name="android:windowFullscreen">true</item>-->
         <item name="android:windowBackground">@color/color_black</item>
+<!--        <item name="android:windowContentOverlay">@null</item>//是否有遮盖-->
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <declare-styleable name="view_anchor_behavior">

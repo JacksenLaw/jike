@@ -29,6 +29,7 @@
     <string name="send">发送</string>
     <string name="capture_tips">轻触拍照，长按摄像</string>
     <string name="capture_permission_message">必须的权限没有得到授权，功能无法使用 请重新授权</string>
+    <string name="capture_permission_message_rationale">必须的权限没有得到授权，功能无法使用 请到权限设置中授权</string>
     <string name="preview_ok">完成</string>
     <string name="file_upload_failed">文上传失败,请重新发布</string>
     <string name="publishing">正在发布…</string>
@@ -43,6 +44,8 @@
     <string name="sure">确定</string>
     <string name="tag_title">选择标签</string>
     <string name="publish_success">发布成功</string>
+    <string name="comment_add_success">评论成功</string>
+    <string name="comment_add_failed">评论失败</string>
     <string name="file_upload_cover_message">封面图上传失败</string>
     <string name="file_upload_original_message">原始文件上传失败</string>
     <string name="publish_say_something">说点什么吧</string>

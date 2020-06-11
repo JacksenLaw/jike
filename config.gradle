@@ -4,8 +4,8 @@ ext {
     buildToolsVersion = "29.0.3"
     minSdkVersion = 21
     targetSdkVersion = 29
-    versionCode = 1
-    versionName = "1.0"
+    versionCode = 10001
+    versionName = "1.0.0.01"
 
     implementation = [
 
@@ -44,11 +44,15 @@ ext {
             "glide-transformations": 'jp.wasabeef:glide-transformations:4.0.0',
 
             //相机
-            "camera-core"          : 'androidx.camera:camera-core:1.0.0-alpha04',//beta03
-            "camera-camera2"       : 'androidx.camera:camera-camera2:1.0.0-alpha04',//beta03
-            "camera-view"          : 'androidx.camera:camera-view:1.0.0-alpha01',//alpha10
-            "camera-extensions"    : 'androidx.camera:camera-extensions:1.0.0-alpha01',//alpha10
-//            "camera-lifecycle"    : 'androidx.camera:camera-lifecycle:1.0.0-alpha04',//beta03
+//            "camera-core"          : 'androidx.camera:camera-core:1.0.0-alpha04',
+            //CameraX 核心库使用 camera2 实现
+            "camera-camera2"       : 'androidx.camera:camera-camera2:1.0.0-beta03',
+            //可以使用CameraView
+            "camera-view"          : 'androidx.camera:camera-view:1.0.0-alpha10',
+            //可以使用供应商扩展
+            "camera-extensions"    : 'androidx.camera:camera-extensions:1.0.0-alpha10',
+            //CameraX 的生命周期库
+            "camera-lifecycle"    : 'androidx.camera:camera-lifecycle:1.0.0-beta03',
 
             //workmanager
             "work"                 : 'androidx.work:work-runtime:2.3.4',

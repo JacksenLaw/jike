@@ -5,20 +5,15 @@ import android.view.ViewGroup;
 
 import androidx.annotation.CallSuper;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.jackson.common.extention.LiveDataBus;
 import com.jackson.common.util.PixUtils;
 import com.jackson.common.view.EmptyView;
 import com.jackson.jike.R;
 import com.jackson.jike.databinding.LayoutFeedDetailInteractionBinding;
-import com.jackson.jike.databinding.LayoutFeedInteractionBinding;
 import com.jackson.jike.model.Feed;
-import com.jackson.jike.presenter.InteractionPresenter;
-import com.jackson.jike.ui.home.FeedAdapter;
 
 /**
  * Copyright (C), 2015-2020

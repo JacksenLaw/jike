@@ -40,4 +40,5 @@
     <dimen name="dp_68">68dp</dimen>
     <dimen name="dp_72">72dp</dimen>
     <dimen name="dp_38">38dp</dimen>
+    <dimen name="dp_100">100dp</dimen>
 </resources>
