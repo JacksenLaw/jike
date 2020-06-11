@@ -52,15 +52,11 @@ public class PermissionFragment extends Fragment {
         ArrayList<String> rationalePermission = new ArrayList<>();
 
         for (int i = 0; i < permissions.length; i++) {
-            Log.i("PermissionFragment", "请求的权限 = " + permissions[i]);
             if (!isGranted(permissions[i])) {
-                Log.i("PermissionFragment", "已被拒绝权限 = " + permissions[i]);
                 //用户勾选了不再提示
                 if (!shouldShowRequestPermissionRationale(permissions[i])) {
-                    Log.i("PermissionFragment", "用户勾选了不再提示 = " + permissions[i]);
                     rationalePermission.add(permissions[i]);
                 } else {
-                    Log.i("PermissionFragment", "已被拒绝权限 = " + permissions[i]);
                     denyPermission.add(permissions[i]);
                 }
             }
