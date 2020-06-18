@@ -3,17 +3,16 @@ package com.jackson.common.util;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
-import android.os.Environment;
 
 import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.blankj.utilcode.util.FileIOUtils;
 import com.jackson.common.AppGlobals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class FileUtils {
@@ -26,43 +25,24 @@ public class FileUtils {
     @SuppressLint("RestrictedApi")
     public static LiveData<String> generateVideoCover(final String filePath) {
         final MutableLiveData<String> liveData = new MutableLiveData<>();
-        ArchTaskExecutor.getIOThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-                retriever.setDataSource(filePath);
-                //bugfix:此处应该使用{getFrameAtTime} 获取默认的第一个关键帧，手快写错
-                Bitmap frame = retriever.getFrameAtTime();
-                FileOutputStream fos = null;
-                if (frame != null) {
-                    //压缩到200k以下，再存储到本地文件中
-                    byte[] bytes = compressBitmap(frame, 200);
-                    File file = new File(Environment.getExternalStorageDirectory() + File.separator + "jike", System.currentTimeMillis() + ".jpeg");
-                    try {
-                        if(!file.exists()){
-                            file.mkdirs();
-                        }
-                        file.createNewFile();
-                        fos = new FileOutputStream(file);
-                        fos.write(bytes);
-                        liveData.postValue(file.getAbsolutePath());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if (fos != null) {
-                            try {
-                                fos.flush();
-                                fos.close();
-                                fos = null;
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
+        ArchTaskExecutor.getIOThreadExecutor().execute(() -> {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(filePath);
+            //bugfix:此处应该使用{getFrameAtTime} 获取默认的第一个关键帧，手快写错
+            Bitmap frame = retriever.getFrameAtTime();
+            if (frame != null) {
+                //压缩到200k以下，再存储到本地文件中
+                byte[] bytes = compressBitmap(frame, 200);
+                File file = new File(AppGlobals.getApplication().getCacheDir(), System.currentTimeMillis() + ".jpeg");
 
-                } else {
-                    liveData.postValue(null);
-                }
+                FileIOUtils.writeFileFromBytesByStream(file, bytes, progress -> {
+                    KLog.i("progress = " + progress);
+                    if (progress == 1.0) {
+                        liveData.postValue(file.getAbsolutePath());
+                    }
+                });
+            } else {
+                liveData.postValue(null);
             }
         });
         return liveData;

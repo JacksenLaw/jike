@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 /**
  * Copyright (C), 2015-2020
@@ -44,17 +43,20 @@ public class LivePermission {
         return null;
     }
 
-    public MutableLiveData<PermissionResult> request(String permission) {
-        return requestArray(permission);
+    public MutableLiveData<PermissionResult> requestPermission(String permission, String permissionTip) {
+        return requestPermissions(new String[]{permission}, new String[]{permissionTip});
     }
 
-    public MutableLiveData<PermissionResult> requestArray(String... permission) {
-        liveFragment.requestPermissions(permission);
+    public MutableLiveData<PermissionResult> requestPermissions(String[] permission, String[] permissionTips) {
+        if (permission.length != permissionTips.length) {
+            throw new RuntimeException("The length of permission must be the same as the length of permissionTips");
+        }
+        liveFragment.requestPermissions(permission, permissionTips);
         return liveFragment.liveData;
     }
 
-    public void removeObserver(Observer observer){
-        liveFragment.removeObserver(observer);
+    public boolean checkSelfPermission(String permission) {
+        return liveFragment.isGranted(permission);
     }
 
 }

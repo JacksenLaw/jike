@@ -6,14 +6,13 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jackson.common.util.KLog;
 import com.jackson.common.util.StatusBar;
 import com.jackson.jike.R;
 import com.jackson.jike.model.User;
 import com.jackson.jike.presenter.UserPresenter;
-import com.jackson.common.util.KLog;
 import com.jackson.network.ApiResponse;
 import com.jackson.network.JsonCallback;
-import com.jakewharton.rxbinding3.view.RxView;
 
 import java.util.Calendar;
 import java.util.UUID;
@@ -32,12 +31,8 @@ public class LoginActivity extends AppCompatActivity {
 
         loading = findViewById(R.id.loading);
 
-        RxView.clicks(findViewById(R.id.back))
-                .subscribe(unit -> finish());
-
-        RxView.clicks(findViewById(R.id.login_qq))
-//                .throttleFirst(1, TimeUnit.SECONDS)
-                .subscribe(unit -> toggle());
+        findViewById(R.id.back).setOnClickListener(v -> finish());
+        findViewById(R.id.login_qq).setOnClickListener(v -> toggle());
     }
 
     private void toggle() {

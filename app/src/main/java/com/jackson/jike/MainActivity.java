@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private NavController navController;
     private AppBottomBar navView;
-    private int curMenuId;
+    private int curMenuId = 1416277141;
     private long startTime;
 
     @Override

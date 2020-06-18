@@ -1,6 +1,5 @@
 package com.jackson.jike.ui.publish;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Looper;
@@ -11,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkContinuation;
@@ -28,6 +26,7 @@ import com.jackson.jike.databinding.ActivityPublishBinding;
 import com.jackson.jike.model.Feed;
 import com.jackson.jike.model.TagList;
 import com.jackson.jike.presenter.InteractionPresenter;
+import com.jackson.jike.presenter.PublishPresenter;
 import com.jackson.nav_annotation.ActivityDestination;
 import com.jackson.network.ApiResponse;
 import com.jackson.network.JsonCallback;
@@ -47,6 +46,7 @@ public class PublishActivity extends AppCompatActivity {
     private UUID fileUploadUUID;  //文件uuid
     private String coverUploadUrl, fileUploadUrl;
     private TagList mTagList;
+    private LoadingDialog mLoadingDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,22 +54,15 @@ public class PublishActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_publish);
 
-        mBinding.actionClose.setOnClickListener(v -> {
-
-            new AlertDialog.Builder(this)
-                    .setMessage(getString(R.string.publish_exit_message))
-                    .setNegativeButton(getString(R.string.cancel), null)
-                    .setPositiveButton(getString(R.string.sure), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            finish();
-                        }
-                    }).create().show();
-        });
+        mBinding.actionClose.setOnClickListener(v ->
+            finishActivity()
+        );
 
         mBinding.actionPublish.setOnClickListener(v -> {
-            publish();
+            if (!InteractionPresenter.isLogin(this, user -> publish())) {
+            }else{
+                publish();
+            }
         });
 
         mBinding.actionDeleteFile.setOnClickListener(v -> {
@@ -82,9 +75,9 @@ public class PublishActivity extends AppCompatActivity {
             isVideo = false;
         });
 
-        mBinding.actionAddFile.setOnClickListener(v -> {
-            CaptureActivity.startActivityForResult(this);
-        });
+        mBinding.actionAddFile.setOnClickListener(v ->
+                CaptureActivity.startActivityForResult(this)
+        );
 
         mBinding.actionAddTag.setOnClickListener(v -> {
             TagBottomSheetDialogFragment fragment = new TagBottomSheetDialogFragment();
@@ -96,7 +89,24 @@ public class PublishActivity extends AppCompatActivity {
         });
     }
 
-    private LoadingDialog mLoadingDialog = null;
+    private void finishActivity() {
+        new AlertDialog.Builder(this)
+                .setMessage(getString(R.string.publish_exit_message))
+                .setNegativeButton(getString(R.string.cancel), null)
+                .setPositiveButton(getString(R.string.sure), (dialog, which) -> {
+                    dialog.dismiss();
+                    finish();
+                }).create().show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!TextUtils.isEmpty(filePath) || !TextUtils.isEmpty(mBinding.inputView.getText().toString())) {
+            finishActivity();
+            return;
+        }
+        super.onBackPressed();
+    }
 
     private void showLoading() {
         if (mLoadingDialog == null) {
@@ -135,18 +145,15 @@ public class PublishActivity extends AppCompatActivity {
         List<OneTimeWorkRequest> workRequests = new ArrayList<>();
         if (isVideo) {
             //截取视频封面
-            FileUtils.generateVideoCover(filePath).observe(this, new Observer<String>() {
-                @Override
-                public void onChanged(String s) {
-                    coverFilePath = s;
+            FileUtils.generateVideoCover(filePath).observe(this, s -> {
+                coverFilePath = s;
 
-                    //上传封面文件
-                    OneTimeWorkRequest request = getOneTimeWorkRequest(coverFilePath);
-                    coverUploadUUID = request.getId();
+                //上传封面文件
+                OneTimeWorkRequest request = getOneTimeWorkRequest(coverFilePath);
+                coverUploadUUID = request.getId();
 
-                    workRequests.add(request);
-                    enqueue(workRequests);
-                }
+                workRequests.add(request);
+                enqueue(workRequests);
             });
         }
         //上传原始文件
@@ -166,51 +173,48 @@ public class PublishActivity extends AppCompatActivity {
         continuation.enqueue();
 
         //观察每个任务的状态
-        continuation.getWorkInfosLiveData().observe(this, new Observer<List<WorkInfo>>() {
-            @Override
-            public void onChanged(List<WorkInfo> workInfos) {
-                //状态：block running enuqued failed success finish
-                int completedCount = 0;//标记有几个任务完成
-                int failedCount = 0;
-                for (WorkInfo workInfo : workInfos) {
-                    //获取任务状态
-                    WorkInfo.State state = workInfo.getState();
-                    //获取任务输出结果
-                    Data outputData = workInfo.getOutputData();
-                    //获取任务id
-                    UUID id = workInfo.getId();
-                    if (state == WorkInfo.State.FAILED) {
-                        if (id.equals(coverUploadUUID)) {
-                            CommonUtil.showToast(getString(R.string.file_upload_cover_message));
-                        } else if (id.equals(fileUploadUUID)) {
-                            CommonUtil.showToast(getString(R.string.file_upload_original_message));
-                        }
-                        failedCount++;
-                    } else if (state == WorkInfo.State.SUCCEEDED) {
-                        String fileUrl = outputData.getString("fileUrl");
-                        if (id.equals(coverUploadUUID)) {
-                            coverUploadUrl = fileUrl;
-                        } else if (id.equals(fileUploadUUID)) {
-                            fileUploadUrl = fileUrl;
-                        }
-                        completedCount++;
+        continuation.getWorkInfosLiveData().observe(this, workInfos -> {
+            //状态：block running enuqued failed success finish
+            int completedCount = 0;//标记有几个任务完成
+            int failedCount = 0;
+            for (WorkInfo workInfo : workInfos) {
+                //获取任务状态
+                WorkInfo.State state = workInfo.getState();
+                //获取任务输出结果
+                Data outputData = workInfo.getOutputData();
+                //获取任务id
+                UUID id = workInfo.getId();
+                if (state == WorkInfo.State.FAILED) {
+                    if (id.equals(coverUploadUUID)) {
+                        CommonUtil.showToast(getString(R.string.file_upload_cover_message));
+                    } else if (id.equals(fileUploadUUID)) {
+                        CommonUtil.showToast(getString(R.string.file_upload_original_message));
                     }
-
-
+                    failedCount++;
+                } else if (state == WorkInfo.State.SUCCEEDED) {
+                    String fileUrl = outputData.getString("fileUrl");
+                    if (id.equals(coverUploadUUID)) {
+                        coverUploadUrl = fileUrl;
+                    } else if (id.equals(fileUploadUUID)) {
+                        fileUploadUrl = fileUrl;
+                    }
+                    completedCount++;
                 }
 
-                if (completedCount >= workInfos.size()) {
-                    //发布帖子
-                    publishFeed();
-                } else if (failedCount > 0) {
-                    dismissLoading();
-                }
+
+            }
+
+            if (completedCount >= workInfos.size()) {
+                //发布帖子
+                publishFeed();
+            } else if (failedCount > 0) {
+                dismissLoading();
             }
         });
     }
 
     private void publishFeed() {
-        InteractionPresenter.publishFeed(
+        PublishPresenter.publishFeed(
                 new JsonCallback<JSONObject>() {
                     @Override
                     public void onSuccess(ApiResponse<JSONObject> response) {

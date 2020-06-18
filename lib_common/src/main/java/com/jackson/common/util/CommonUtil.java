@@ -3,7 +3,7 @@ package com.jackson.common.util;
 import android.annotation.SuppressLint;
 import android.os.Looper;
 
-import androidx.annotation.IdRes;
+import androidx.annotation.StringRes;
 import androidx.arch.core.executor.ArchTaskExecutor;
 
 import com.jackson.common.AppGlobals;
@@ -22,27 +22,20 @@ public class CommonUtil {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             ToastUtil.showShort(msg);
         } else {
-            ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
-                @Override
-                public void run() {
-                    ToastUtil.showShort(msg);
-                }
-            });
+            ArchTaskExecutor.getMainThreadExecutor().execute(() ->
+                    ToastUtil.showShort(msg)
+            );
         }
     }
 
     @SuppressLint("RestrictedApi")
-    public static void showToast(@IdRes final int resId) {
+    public static void showToast(@StringRes final int resId) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             ToastUtil.showShort(AppGlobals.getApplication().getString(resId));
         } else {
-            ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
-                @SuppressLint("ResourceType")
-                @Override
-                public void run() {
-                    ToastUtil.showShort(AppGlobals.getApplication().getString(resId));
-                }
-            });
+            ArchTaskExecutor.getMainThreadExecutor().execute(() ->
+                    ToastUtil.showShort(AppGlobals.getApplication().getString(resId))
+            );
         }
     }
 

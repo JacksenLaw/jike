@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.AspectRatio;
 import androidx.camera.core.Camera;
@@ -75,18 +74,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-@RequiresApi(api = Build.VERSION_CODES.Q)
 public class CaptureActivity extends AppCompatActivity {
 
     public static final int REQ_CAPTURE = 10001;
-    private static final String[] PERMISSIONS = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
+    private static final String[] PERMISSIONS = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
+    private static final String[] PERMISSION_TIPS = new String[]{"相机权限", "读写权限", "麦克风权限"};
     private static final double RATIO_4_3_VALUE = 4.0 / 3.0;
     private static final double RATIO_16_9_VALUE = 16.0 / 9.0;
     //分辨率
     private Size resolution = new Size(1080, 1920);
     private CameraXPreviewView mPreviewView;
     private RecordView mRecordView;
-    private ImageView mCameraSwitchView;
+    private ImageView mCameraSwitchView, mGallery;
     /**
      * 照相
      */
@@ -142,29 +141,21 @@ public class CaptureActivity extends AppCompatActivity {
         mPreviewView = mBinding.preView;
         mRecordView = mBinding.recordView;
         mCameraSwitchView = mBinding.cameraSwitch;
+        mGallery = mBinding.gallery;
         mFocusView = mBinding.focusView;
         mExecutorService = Executors.newSingleThreadExecutor();
         updateCameraUi();
         initListener();
 
         LivePermission livePermission = new LivePermission(this);
-        livePermission.requestArray(PERMISSIONS)
+        livePermission.requestPermissions(PERMISSIONS, PERMISSION_TIPS)
                 .observe(this, permissionResult -> {
-                    if (permissionResult instanceof PermissionResult.Grant) {
+                    if (permissionResult instanceof PermissionResult.Granted) {
                         setUpCamera();
-                    } else if (permissionResult instanceof PermissionResult.Deny) {
+                    } else if (permissionResult instanceof PermissionResult.Denied) {
                         mBinding.container.postDelayed(this::finish, 500);
                     } else {
-                        new AlertDialog.Builder(CaptureActivity.this)
-                                .setMessage(getString(R.string.capture_permission_message_rationale))
-                                .setNegativeButton(getString(R.string.capture_permission_no), (dialog, which) -> {
-                                    dialog.dismiss();
-                                    finish();
-                                })
-                                .setPositiveButton(getString(R.string.capture_permission_ok), (dialog, which) -> {
-                                    CommonUtil.showToast("go permission setting");
-                                    finish();
-                                }).create().show();
+                        CommonUtil.showToast("go permission setting");
                     }
                 });
 
@@ -240,6 +231,19 @@ public class CaptureActivity extends AppCompatActivity {
     }
 
     private void initListener() {
+
+        mGallery.setOnClickListener(v -> {
+//            Intent intent = new Intent(Intent.ACTION_PICK);
+//            intent.setType("image/*");
+//            startActivityForResult(intent,111);
+//            PhotoUtils.select(this, new Function3<Uri, Boolean, String, Unit>() {
+//                @Override
+//                public Unit invoke(Uri uri, Boolean aBoolean, String s) {
+//                    PreviewActivity.startActivityForResult(CaptureActivity.this, s, false, "完成");
+//                    return null;
+//                }
+//            });
+        });
 
         mCameraSwitchView.setOnClickListener(v -> {
             if (mCameraSelector != null) {

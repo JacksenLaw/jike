@@ -11,7 +11,7 @@ import android.content.pm.PackageManager;
  */
 public class PermissionResult {
 
-    public int State = -1;
+    public int state = -1;
 
     public @interface Result {
         //允许
@@ -22,16 +22,16 @@ public class PermissionResult {
         int RATIONALE = 1;
     }
 
-    public static class Grant extends PermissionResult {
-        public Grant() {
-            State = Result.GRANTED;
+    public static class Granted extends PermissionResult {
+        public Granted() {
+            state = Result.GRANTED;
         }
     }
 
-    public static class Deny extends PermissionResult {
+    public static class Denied extends PermissionResult {
         public String [] permissions;
-        public Deny(String... permission) {
-            State = Result.DENIED;
+        public Denied(String... permission) {
+            state = Result.DENIED;
             permissions = permission;
         }
     }
@@ -39,7 +39,7 @@ public class PermissionResult {
     public static class Rationale extends PermissionResult {
         public String [] permissions;
         public Rationale(String... permission) {
-            State = Result.RATIONALE;
+            state = Result.RATIONALE;
             permissions = permission;
         }
     }

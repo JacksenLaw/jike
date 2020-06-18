@@ -18,9 +18,9 @@
             android:id="@+id/comment_ext_layout"
             android:layout_width="@dimen/dp_60"
             android:layout_height="@dimen/dp_60"
-            android:layout_marginLeft="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_5"
-            android:layout_marginRight="@dimen/dp_5"
+            android:layout_marginEnd="@dimen/dp_5"
             android:layout_marginBottom="@dimen/dp_5"
             android:visibility="gone">
 
@@ -36,7 +36,8 @@
                 android:layout_height="@dimen/dp_20"
                 android:layout_gravity="center"
                 android:src="@drawable/icon_video_play"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:contentDescription="@null" />
 
             <ImageView
                 android:id="@+id/comment_delete"
@@ -45,7 +46,8 @@
                 android:layout_gravity="right|top"
                 android:padding="@dimen/dp_3"
                 android:src="@drawable/icon_close"
-                android:tint="@color/color_white" />
+                android:tint="@color/color_white"
+                android:contentDescription="@null" />
             <!-- android:tint="@color/color_white" 为ImageView着色-->
 
         </FrameLayout>
@@ -65,6 +67,8 @@
             android:paddingRight="@dimen/dp_10">
 
             <com.jackson.jike.view.PPEditTextView
+                android:paddingStart="@dimen/dp_5"
+                android:paddingEnd="@dimen/dp_5"
                 android:id="@+id/input_view"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dp_40"
@@ -79,14 +83,15 @@
                 android:id="@+id/comment_video"
                 android:layout_width="@dimen/dp_36"
                 android:layout_height="@dimen/dp_36"
-                android:layout_marginLeft="@dimen/dp_10"
-                android:src="@drawable/icon_publish_video" />
+                android:layout_marginStart="@dimen/dp_10"
+                android:src="@drawable/icon_publish_video"
+                android:contentDescription="@null" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/comment_send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dp_10"
+                android:layout_marginStart="@dimen/dp_10"
                 android:backgroundTint="@color/color_theme"
                 android:gravity="center"
                 android:paddingLeft="@dimen/dp_14"

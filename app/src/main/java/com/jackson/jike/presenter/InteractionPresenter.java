@@ -4,21 +4,19 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jackson.common.AppGlobals;
 import com.jackson.common.extention.LiveDataBus;
 import com.jackson.common.util.CommonUtil;
-import com.jackson.jike.R;
 import com.jackson.jike.model.Comment;
 import com.jackson.jike.model.Feed;
 import com.jackson.jike.model.TagList;
-import com.jackson.jike.model.User;
 import com.jackson.jike.ui.login.UserManager;
+import com.jackson.jike.ui.share.ShareBottomSheetDialog;
 import com.jackson.jike.ui.share.ShareDialog;
 import com.jackson.network.ApiResponse;
 import com.jackson.network.ApiService;
@@ -34,7 +32,7 @@ import java.util.List;
  * Date: 2020/5/09 9:35
  * Description: 网络请求
  */
-public class InteractionPresenter {
+public class InteractionPresenter extends BasePresenter {
 
     public static final String DATA_FROM_INTERACTION = "data_from_interaction";
 
@@ -46,32 +44,17 @@ public class InteractionPresenter {
 
     private static final String URL_TOGGLE_COMMENT_LIKE = "/ugc/toggleCommentLike";
 
-    private static boolean isLogin(LifecycleOwner owner, Observer<User> observer) {
-        if (UserManager.get().isLogin()) {
-            return true;
-        } else {
-            LiveData<User> liveData = UserManager.get().login(AppGlobals.getApplication());
-            if (owner != null) {
-                liveData.observe(owner, observer);
-            } else {
-                liveData.observeForever(observer);
-            }
-        }
-        return false;
-    }
-
     /**
      * 给一个帖子点赞/取消点赞，它和给帖子点踩一踩是互斥的
      */
     public static void toggleFeedLike(LifecycleOwner owner, Feed feed) {
-        if (!isLogin(owner, user ->
-                toggleFeedLikeInternal(feed))) {
+        if (!isLogin(owner, user -> toggleFeedLike(feed))) {
         } else {
-            toggleFeedLikeInternal(feed);
+            toggleFeedLike(feed);
         }
     }
 
-    private static void toggleFeedLikeInternal(Feed feed) {
+    private static void toggleFeedLike(Feed feed) {
         ApiService.get(URL_TOGGLE_FEED_LIKE)
                 .addParam("userId", UserManager.get().getUserId())
                 .addParam("itemId", feed.itemId)
@@ -97,14 +80,13 @@ public class InteractionPresenter {
      * 给一个帖子踩一踩
      */
     public static void toggleFeedDiss(LifecycleOwner owner, Feed feed) {
-        if (!isLogin(owner, user ->
-                toggleFeedDissInternal(feed))) {
+        if (!isLogin(owner, user -> toggleFeedDiss(feed))) {
         } else {
-            toggleFeedDissInternal(feed);
+            toggleFeedDiss(feed);
         }
     }
 
-    private static void toggleFeedDissInternal(Feed feed) {
+    private static void toggleFeedDiss(Feed feed) {
         ApiService.get(URL_TOGGLE_FEED_DISS)
                 .addParam("userId", UserManager.get().getUserId())
                 .addParam("itemId", feed.itemId)
@@ -134,6 +116,7 @@ public class InteractionPresenter {
         } else if (!TextUtils.isEmpty(feed.cover)) {
             shareContent = feed.cover;
         }
+//        ShareBottomSheetDialog shareDialog = new ShareBottomSheetDialog();
         ShareDialog shareDialog = new ShareDialog(context);
         shareDialog.setShareContent(shareContent);
         shareDialog.setShareItemClickListener(v ->
@@ -155,29 +138,20 @@ public class InteractionPresenter {
                         }));
 
         shareDialog.show();
-//        ShareDialog1 dialog1 = new ShareDialog1();
-//        dialog1.show(((AppCompatActivity)context).getSupportFragmentManager(),"share");
+//        shareDialog.show(((FragmentActivity)context).getSupportFragmentManager(),"share");
     }
 
     /**
      * 给一个帖子的评论点赞/取消点赞
-     *
-     * @param owner
-     * @param comment
      */
     public static void toggleCommentLike(LifecycleOwner owner, Comment comment) {
-        if (!isLogin(owner, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                toggleCommentLikeInternal(comment);
-            }
-        })) {
+        if (!isLogin(owner, user -> toggleCommentLike(comment))) {
         } else {
-            toggleCommentLikeInternal(comment);
+            toggleCommentLike(comment);
         }
     }
 
-    private static void toggleCommentLikeInternal(Comment comment) {
+    private static void toggleCommentLike(Comment comment) {
 
         ApiService.get(URL_TOGGLE_COMMENT_LIKE)
                 .addParam("commentId", comment.commentId)
@@ -202,8 +176,7 @@ public class InteractionPresenter {
      * 收藏帖子
      */
     public static void toggleFeedFavourite(LifecycleOwner owner, Feed feed) {
-        if (!isLogin(owner, user ->
-                toggleFeedFavorite(feed))) {
+        if (!isLogin(owner, user -> toggleFeedFavorite(feed))) {
         } else {
             toggleFeedFavorite(feed);
         }
@@ -233,17 +206,9 @@ public class InteractionPresenter {
 
     /**
      * 关注/取消关注一个用户
-     *
-     * @param owner
-     * @param feed
      */
     public static void toggleFollowUser(LifecycleOwner owner, Feed feed) {
-        if (!isLogin(owner, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                toggleFollowUser(feed);
-            }
-        })) {
+        if (!isLogin(owner, user -> toggleFollowUser(feed))) {
         } else {
             toggleFollowUser(feed);
         }
@@ -272,57 +237,9 @@ public class InteractionPresenter {
     }
 
     /**
-     * 发布一条评论
-     *
-     * @param comment  内容
-     * @param itemId   帖子id
-     * @param coverUrl
-     * @param fileUrl
-     * @param width    宽
-     * @param height   高
-     */
-    public static void publishComment(JsonCallback<Comment> callback, LifecycleOwner owner, String comment, long itemId, String coverUrl, String fileUrl, int width, int height) {
-        if (!isLogin(owner, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                publishComment(callback, comment, itemId, coverUrl, fileUrl, width, height);
-            }
-        })) {
-        } else {
-            publishComment(callback, comment, itemId, coverUrl, fileUrl, width, height);
-        }
-
-    }
-
-    private static void publishComment(JsonCallback<Comment> callback, String comment, long itemId, String coverUrl, String fileUrl, int width, int height) {
-        ApiService.post("/comment/addComment")
-                .addParam("userId", UserManager.get().getUserId())
-                .addParam("itemId", itemId)
-                .addParam("commentText", comment)
-                .addParam("image_url", coverUrl)
-                .addParam("video_url", fileUrl)
-                .addParam("width", width)
-                .addParam("height", height)
-                .execute(new JsonCallback<Comment>() {
-                    @Override
-                    public void onSuccess(ApiResponse<Comment> response) {
-                        callback.onSuccess(response);
-                    }
-
-                    @Override
-                    public void onError(ApiResponse<Comment> response) {
-                        CommonUtil.showToast("评论失败:" + response.message);
-                        callback.onError(response);
-                    }
-                });
-    }
-
-    /**
      * 删除一个帖子
      *
-     * @param context
-     * @param itemId  帖子id
-     * @return
+     * @param itemId 帖子id
      */
     public static LiveData<Boolean> deleteFeed(Context context, long itemId) {
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
@@ -357,10 +274,8 @@ public class InteractionPresenter {
     /**
      * 删除某个帖子的一个评论
      *
-     * @param context
      * @param itemId    帖子id
      * @param commentId 评论id
-     * @return
      */
     public static LiveData<Boolean> deleteFeedComment(Context context, long itemId, long commentId) {
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
@@ -396,8 +311,6 @@ public class InteractionPresenter {
 
     /**
      * 获取发布页面话题列表数据
-     *
-     * @param callback
      */
     public static void queryTagList(JsonCallback<List<TagList>> callback) {
         ApiService.get("/tag/queryTagList")
@@ -419,46 +332,12 @@ public class InteractionPresenter {
                 });
     }
 
-    public static void publishFeed(JsonCallback<JSONObject> callback, String coverUploadUrl, String fileUploadUrl, int width, int height, long tagId, String tagTitle, String feedText, int feedType) {
-        ApiService.post("/feeds/publish")
-                .addParam("coverUrl", coverUploadUrl)
-                .addParam("fileUrl", fileUploadUrl)
-                .addParam("fileWidth", width)
-                .addParam("fileHeight", height)
-                .addParam("userId", UserManager.get().getUserId())
-                .addParam("tagId", tagId)
-                .addParam("tagTitle", tagTitle)
-                .addParam("feedText", feedText)
-                .addParam("feedType", feedType)
-                .execute(new JsonCallback<JSONObject>() {
-                    @Override
-                    public void onSuccess(ApiResponse<JSONObject> response) {
-                        CommonUtil.showToast(AppGlobals.getApplication().getString(R.string.publish_success));
-                        callback.onSuccess(response);
-                    }
-
-                    @Override
-                    public void onError(ApiResponse<JSONObject> response) {
-                        CommonUtil.showToast(response.message);
-                        callback.onError(response);
-                    }
-                });
-    }
-
     /**
      * 关注/取消关注一个帖子标签
-     *
-     * @param owner
-     * @param tagList
      */
     public static void toggleTagLike(LifecycleOwner owner, TagList tagList) {
-        if (!isLogin(owner, new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                toggleTagLikeInternal(tagList);
-            }
-        })) ;
-        else {
+        if (!isLogin(owner, user -> toggleTagLikeInternal(tagList))) {
+        } else {
             toggleTagLikeInternal(tagList);
         }
     }

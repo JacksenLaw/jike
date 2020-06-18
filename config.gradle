@@ -4,13 +4,15 @@ ext {
     buildToolsVersion = "29.0.3"
     minSdkVersion = 21
     targetSdkVersion = 29
-    versionCode = 10001
-    versionName = "1.0.0.01"
+    versionCode = 10100
+    versionName = "1.0.1.00"
 
     implementation = [
 
             //兼容包
-            "appcompat"            : "androidx.appcompat:appcompat:1.1.0",
+            "appcompat"            : 'androidx.appcompat:appcompat:1.1.0',
+            //注解
+            "annotation"           : 'androidx.annotation:annotation:1.1.0',
             //material组件
             "material"             : 'com.google.android.material:material:1.2.0-alpha06',
             //约束布局
@@ -52,7 +54,7 @@ ext {
             //可以使用供应商扩展
             "camera-extensions"    : 'androidx.camera:camera-extensions:1.0.0-alpha10',
             //CameraX 的生命周期库
-            "camera-lifecycle"    : 'androidx.camera:camera-lifecycle:1.0.0-beta03',
+            "camera-lifecycle"     : 'androidx.camera:camera-lifecycle:1.0.0-beta03',
 
             //workmanager
             "work"                 : 'androidx.work:work-runtime:2.3.4',
@@ -69,6 +71,15 @@ ext {
 
             //rxbinging
             "rxbinging"            : 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2',
+
+            //util
+            "utilcodex"            : 'com.blankj:utilcodex:1.29.0',
+
+            //解除P反射限制
+            "free_reflection"      : 'me.weishu:free_reflection:2.2.0',
+
+            //局部通知管理器
+            "localbroadcastmanager": 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0',
 
     ]
 

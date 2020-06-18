@@ -1,7 +1,7 @@
 package com.jackson.jike.ui.detail;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,18 +9,19 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.arch.core.executor.ArchTaskExecutor;
 
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.jackson.common.AppGlobals;
 import com.jackson.common.dialog.LoadingDialog;
 import com.jackson.common.util.CommonUtil;
@@ -31,7 +32,7 @@ import com.jackson.common.util.ViewHelper;
 import com.jackson.jike.R;
 import com.jackson.jike.databinding.LayoutCommentDialogBinding;
 import com.jackson.jike.model.Comment;
-import com.jackson.jike.presenter.InteractionPresenter;
+import com.jackson.jike.presenter.PublishPresenter;
 import com.jackson.jike.ui.publish.CaptureActivity;
 import com.jackson.network.ApiResponse;
 import com.jackson.network.JsonCallback;
@@ -45,7 +46,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Author: Luo
  * Date: 2020/5/14 11:00
  * Description: 评论对话框
- * TODO 需要增加点击外部隐藏功能
  */
 public class CommentDialog extends AppCompatDialogFragment implements View.OnClickListener {
 
@@ -59,9 +59,10 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
     private String coverUrl;
     private String fileUrl;
     private LoadingDialog loadingDialog;
+    @SuppressLint("RestrictedApi")
     private Executor ioExecutor = ArchTaskExecutor.getIOThreadExecutor();
+    @SuppressLint("RestrictedApi")
     private Executor mainExecutor = ArchTaskExecutor.getMainThreadExecutor();
-    private Window window;
     private Context mContext = AppGlobals.getApplication();
 
     public static CommentDialog newInstance(long itemId) {
@@ -73,17 +74,29 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
         return fragment;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        //得到dialog对应的window
+        Window window = getDialog().getWindow();
+        //可以去除自带margin
+        if (window != null) {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            //得到LayoutParams
+            WindowManager.LayoutParams params = window.getAttributes();
+
+            //修改gravity
+            params.gravity = Gravity.BOTTOM;
+            params.width = WindowManager.LayoutParams.MATCH_PARENT;
+            window.setAttributes(params);
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (getDialog() != null) {
-            window = getDialog().getWindow();
-            if (window != null) {
-                window.setWindowAnimations(0);
-            }
-        }
-
-        mBinding = LayoutCommentDialogBinding.inflate(inflater, window.findViewById(android.R.id.content), false);
+        mBinding = LayoutCommentDialogBinding.inflate(inflater, container, false);
         mBinding.commentVideo.setOnClickListener(this);
         mBinding.commentDelete.setOnClickListener(this);
         mBinding.commentSend.setOnClickListener(this);
@@ -94,22 +107,10 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
 
         ViewHelper.setViewOutLine(mBinding.getRoot(), PixUtils.dp2px(10), ViewHelper.RADIUS_TOP);
 
-        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-
-        mBinding.getRoot().postDelayed(this::showSoftInputMethod, 200);
+        mBinding.getRoot().postDelayed(() -> KeyboardUtils.showSoftInput(mBinding.inputView), 200);
 
         dismissWhenPressBack();
         return mBinding.getRoot();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Dialog dialog = getDialog();
-        if (dialog != null) {
-            dialog.setCanceledOnTouchOutside(true);
-        }
     }
 
     private void dismissWhenPressBack() {
@@ -117,18 +118,6 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
             mBinding.inputView.postDelayed(this::dismiss, 200);
             return true;
         });
-    }
-
-
-    private void showSoftInputMethod() {
-        mBinding.inputView.setFocusable(true);
-        mBinding.inputView.setFocusableInTouchMode(true);
-        //请求获得焦点
-        mBinding.inputView.requestFocus();
-        mBinding.inputView.performClick();
-        InputMethodManager manager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (manager != null) manager.showSoftInput(mBinding.inputView, 0);
-
     }
 
     @Override
@@ -228,7 +217,7 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
 
     private void publish() {
         String commentText = mBinding.inputView.getText().toString();
-        InteractionPresenter.publishComment(new JsonCallback<Comment>() {
+        PublishPresenter.publishComment(new JsonCallback<Comment>() {
             @Override
             public void onSuccess(ApiResponse<Comment> response) {
                 super.onSuccess(response);
@@ -285,7 +274,7 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
 
     @Override
     public void dismiss() {
-        super.dismiss();
+        KeyboardUtils.hideSoftInput(mBinding.inputView);
         dismissLoadingDialog();
         mBinding.inputView.setText("");
         filePath = null;
@@ -294,6 +283,7 @@ public class CommentDialog extends AppCompatDialogFragment implements View.OnCli
         isVideo = false;
         width = 0;
         height = 0;
+        super.dismiss();
     }
 
     public interface commentAddListener {

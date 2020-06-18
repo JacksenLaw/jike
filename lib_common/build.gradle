@@ -32,6 +32,8 @@ dependencies {
 
     //兼容包
     api rootProject.implementation.appcompat
+    //注解包
+    api rootProject.implementation.annotation
     //material组件
     api rootProject.implementation.material
     //约束布局
@@ -99,5 +101,9 @@ dependencies {
     api rootProject.implementation.fastjson
 
     //rxbinging
-    api rootProject.implementation.rxbinging
+//    api rootProject.implementation.rxbinging
+
+    implementation rootProject.implementation.free_reflection
+
+    api rootProject.implementation.utilcodex
 }
